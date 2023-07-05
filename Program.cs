@@ -21,42 +21,28 @@ namespace ObjetPowa
             //pikachu.Damage(10000);
             //pikachu.Resurection(RappelType.Basique);
             //pikachu.Heal(PotionType.HyperPotion);
-
             do
             {
                 // Choix du joueur      // INPUT
-                //Console.WriteLine("Action du joueur 1-attack/2-potion");
-                //string response = Console.ReadLine();
+                CharacterChoice playerChoice = GetPlayerChoice();
 
+                // Choix de l'IA
+                CharacterChoice randomChoice = AIChoice();
 
                 // Met à jour le combat     // UPDATE
-                int r = new Random().Next(1, 100);
-                CharacterChoice randomChoice;
-                //randomChoice = (CharacterChoice) r;       <=== Cast un int en CharacterChoice
-                if (r < 90)
-                {
-                    randomChoice = CharacterChoice.Attack;
-                }
-                else
-                {
-                    randomChoice = CharacterChoice.Heal;
-                }
-
-                epicFight.PlayRound(CharacterChoice.Attack, randomChoice);
-
+                epicFight.PlayRound(playerChoice, randomChoice);
 
                 // Affiche la situation du jeu      // DRAW
-                Console.WriteLine($"{pikachu.Name} : {pikachu.CurrentHp} / {pikachu.HpMax}");
-                Console.WriteLine($"{sangoku.Name} : {sangoku.CurrentHp} / {sangoku.HpMax}");
+                DrawFight(pikachu, sangoku);
 
             } while (epicFight.IsFightFinished() == false);
 
             // Resultat final
-            if(pikachu.IsDead() && sangoku.IsDead() ) 
+            if (pikachu.IsDead() && sangoku.IsDead())
             {
                 Console.WriteLine($"Draw");
             }
-            else if(pikachu.IsDead())
+            else if (pikachu.IsDead())
             {
                 Console.WriteLine($"{sangoku.Name} winner");
             }
@@ -65,9 +51,52 @@ namespace ObjetPowa
                 Console.WriteLine($"{pikachu.Name} winner");
             }
 
-
-
             Console.ReadKey();
+        }
+
+        private static void DrawFight(Pokemon pikachu, Pokemon sangoku)
+        {
+            Console.WriteLine($"{pikachu.Name} : {pikachu.CurrentHp} / {pikachu.HpMax}");
+            Console.WriteLine($"{sangoku.Name} : {sangoku.CurrentHp} / {sangoku.HpMax}");
+        }
+
+        private static CharacterChoice AIChoice()
+        {
+            int r = new Random().Next(1, 100);
+            CharacterChoice randomChoice;
+            //randomChoice = (CharacterChoice) r;       <=== Cast un int en CharacterChoice
+            if (r < 90)
+            {
+                randomChoice = CharacterChoice.Attack;
+            }
+            else
+            {
+                randomChoice = CharacterChoice.Heal;
+            }
+
+            return randomChoice;
+        }
+
+        private static CharacterChoice GetPlayerChoice()
+        {
+            CharacterChoice playerChoice = CharacterChoice.None;
+            do
+            {
+                Console.WriteLine("Action du joueur 1-attack/2-potion");
+                string response = Console.ReadLine();
+                switch (response)
+                {
+                    case "1":
+                        playerChoice = CharacterChoice.Attack;
+                        break;
+                    case "2":
+                        playerChoice = CharacterChoice.Heal;
+                        break;
+                    default:
+                        break;
+                }
+            } while (playerChoice == CharacterChoice.None);
+            return playerChoice;
         }
     }
 }

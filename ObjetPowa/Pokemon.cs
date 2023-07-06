@@ -28,10 +28,20 @@ namespace ObjetPowa
             get => _currentHp;
         }
         public int HpMax { get => _hpMax; }
+        public int Speed => _speed;
 
 
         // Constructeur / Constructor
-        public Pokemon(string name, int maxHp)
+        //public Pokemon(string name, int maxHp)
+        //{
+        //    PreparePokemon(name, maxHp, 100);
+        //}
+        public Pokemon(string name, int maxHp, int speed = 100)
+        {
+            PreparePokemon(name, maxHp, speed);
+        }
+
+        private void PreparePokemon(string name, int maxHp, int speed)
         {
             _name = name;
             _level = 5;
@@ -39,8 +49,9 @@ namespace ObjetPowa
             _hpMax = maxHp;
             _attack = 25;
             _defense = 25;
-            _speed = 100;
+            _speed = speed;
         }
+
 
         // Méthodes / Methodes
         /// <summary>

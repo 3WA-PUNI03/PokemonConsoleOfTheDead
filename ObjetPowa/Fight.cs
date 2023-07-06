@@ -23,27 +23,39 @@ namespace ObjetPowa
         // Méthodes / Methodes
         public void PlayRound(CharacterChoice playerChoice, CharacterChoice enemyChoice)
         {
-            // Player attack
-            switch (playerChoice)
+            if (_player.Speed > _enemy.Speed)
             {
-                case CharacterChoice.Attack:
-                    _enemy.Damage(10);
-                    break;
-                case CharacterChoice.Heal:
-                    _player.Heal(PotionType.Potion);
-                    break;
-                default:
-                    break;
-            }
+                // Player attack
+                PokemonTurn(playerChoice, _player, _enemy);
 
-            // Enemy attack
-            switch (enemyChoice)
+                if (_enemy.IsDead() == false)
+                {
+                    // Enemy attack
+                    PokemonTurn(enemyChoice, _enemy, _player);
+                }
+            }
+            else
+            {
+                // Enemy attack
+                PokemonTurn(enemyChoice, _enemy, _player);
+
+                if (_player.IsDead() == false)
+                {
+                    // Player attack
+                    PokemonTurn(playerChoice, _player, _enemy);
+                }
+            }
+        }
+
+        private void PokemonTurn(CharacterChoice choice, Pokemon main, Pokemon opponent)
+        {
+            switch (choice)
             {
                 case CharacterChoice.Attack:
-                    _player.Damage(10);
+                    opponent.Damage(10);
                     break;
                 case CharacterChoice.Heal:
-                    _enemy.Heal(PotionType.Potion);
+                    main.Heal(PotionType.Potion);
                     break;
                 default:
                     break;
@@ -52,7 +64,7 @@ namespace ObjetPowa
 
         public bool IsFightFinished()
         {
-            if(_player.IsDead() || _enemy.IsDead())
+            if (_player.IsDead() || _enemy.IsDead())
             {
                 return true;
             }

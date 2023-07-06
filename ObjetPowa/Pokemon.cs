@@ -29,26 +29,26 @@ namespace ObjetPowa
         }
         public int HpMax { get => _hpMax; }
         public int Speed => _speed;
-
+        
 
         // Constructeur / Constructor
         //public Pokemon(string name, int maxHp)
         //{
         //    PreparePokemon(name, maxHp, 100);
         //}
-        public Pokemon(string name, int maxHp, int speed = 100)
+        public Pokemon(string name, int maxHp, int speed, int atk, int def)
         {
-            PreparePokemon(name, maxHp, speed);
+            PreparePokemon(name, maxHp, speed, atk, def);
         }
 
-        private void PreparePokemon(string name, int maxHp, int speed)
+        private void PreparePokemon(string name, int maxHp, int speed, int attack, int defense)
         {
             _name = name;
             _level = 5;
             _currentHp = maxHp;
             _hpMax = maxHp;
-            _attack = 25;
-            _defense = 25;
+            _attack = attack;
+            _defense = defense;
             _speed = speed;
         }
 
@@ -58,6 +58,16 @@ namespace ObjetPowa
         /// Impact current health based on amount 
         /// </summary>
 
+        public void Damage(Pokemon opponent)
+        {
+            int atk = opponent._attack;
+            int defense = _defense;
+
+            var degat = atk - (defense/2);
+
+            Damage(degat);
+        }
+        
         public void Damage(int amount)
         {
             if (amount <= 0) return; // Guard

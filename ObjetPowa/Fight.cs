@@ -52,7 +52,9 @@ namespace ObjetPowa
             switch (choice)
             {
                 case CharacterChoice.Attack:
-                    opponent.Damage(10);
+
+                    opponent.Damage(main);
+
                     break;
                 case CharacterChoice.Heal:
                     main.Heal(PotionType.Potion);

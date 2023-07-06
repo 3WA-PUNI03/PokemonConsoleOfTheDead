@@ -14,8 +14,8 @@ namespace ObjetPowa
 
             Console.WriteLine("Hello World");
 
-            Pokemon pikachu = new Pokemon("pikachu", 40);
-            Pokemon sangoku = new Pokemon("sangoku", 50, 90);
+            Pokemon pikachu = new Pokemon("pikachu", 40, 100, 50, 30);
+            Pokemon sangoku = new Pokemon("sangoku", 50, 90, 40, 30);
             Fight epicFight = new Fight(pikachu, sangoku);
 
             //pikachu.Damage(10000);

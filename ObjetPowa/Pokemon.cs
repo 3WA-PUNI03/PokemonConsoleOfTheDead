@@ -14,6 +14,8 @@ namespace ObjetPowa
         // General
         private string _name;
         private int _level;
+        PokemonType _type;
+
         // Health
         private int _currentHp;
         private int _hpMax;
@@ -22,8 +24,7 @@ namespace ObjetPowa
         private int _defense;
         private int _speed;
 
-        float minFactor = 0.85f;
-        float maxFactor = 1f;
+        private int _potionCount;
 
         // Propriétés / Property
         public string Name => _name;
@@ -34,15 +35,19 @@ namespace ObjetPowa
         public int HpMax { get => _hpMax; }
         public int Speed => _speed;
 
+        public int PotionCount { get => _potionCount; }
+
 
         // Constructeur / Constructor
         //public Pokemon(string name, int maxHp)
         //{
         //    PreparePokemon(name, maxHp, 100);
         //}
-        public Pokemon(string name, int maxHp, int speed, int atk, int def)
+        public Pokemon(string name, int maxHp, int speed, int atk, int def, PokemonType type)
         {
             PreparePokemon(name, maxHp, speed, atk, def);
+            _potionCount = 5;
+            _type = type;
         }
 
         private void PreparePokemon(string name, int maxHp, int speed, int attack, int defense)
@@ -56,28 +61,38 @@ namespace ObjetPowa
             _speed = speed;
         }
 
-
         // Méthodes / Methodes
         /// <summary>
         /// Impact current health based on amount 
-        /// </summary>
-
-
-
-        
-
         public void Damage(Pokemon opponent)
         {
             int atk = opponent._attack;
             int defense = _defense;
             int degat = atk - (defense / 2);
+            
+            degat = ApplyRandomFactor(degat);
 
+            degat = CoupCritique(degat);
+
+            degat = TypeResolution(opponent, degat);
+
+            Console.Write($"{degat} / ");
+
+            Damage(degat);
+        }
+
+        private static int ApplyRandomFactor(int degat)
+        {
             // Random factor
             Random r = new Random();
             float random;
             random = r.Next(85, 101) / 100f;      // int / float => float
             degat = (int)(degat * random);   // int * float => float
+            return degat;
+        }
 
+        private static int CoupCritique(int degat)
+        {
             // Coup critique 
             bool isCriticalHit = new Random().NextDouble() < 0.1;
             if (isCriticalHit)
@@ -86,9 +101,29 @@ namespace ObjetPowa
                 Console.WriteLine("Coup critique !");
             }
 
-            Console.Write($"{degat} / ");
+            return degat;
+        }
 
-            Damage(degat);
+        private int TypeResolution(Pokemon opponent, int degat)
+        {
+            // Faiblesse
+            if ((_type == PokemonType.Plant && opponent._type == PokemonType.Fire) ||
+               (_type == PokemonType.Fire && opponent._type == PokemonType.Water) ||
+               (_type == PokemonType.Water && opponent._type == PokemonType.Plant))
+            {
+                degat *= 2;
+                Console.WriteLine("C'est super efficace !");
+            }
+            // Resistance
+            else if ((opponent._type == PokemonType.Plant && _type == PokemonType.Fire) ||
+               (opponent._type == PokemonType.Fire && _type == PokemonType.Water) ||
+               (opponent._type == PokemonType.Water && _type == PokemonType.Plant))
+            {
+                degat /= 2;     // Degat *= 0.5f
+                Console.WriteLine("Ce n'est pas très efficace !");
+            }
+
+            return degat;
         }
 
         public void Damage(int amount)
@@ -125,7 +160,16 @@ namespace ObjetPowa
             switch (potion)
             {
                 case PotionType.Potion:
-                    Heal(50);
+
+                    if (_potionCount > 0)
+                    {
+                        Heal(50);
+                        _potionCount--;
+                    }
+                    else
+                    {
+                        return;
+                    }
                     break;
                 case PotionType.SuperPotion:
                     Heal(100);

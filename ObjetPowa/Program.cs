@@ -9,61 +9,44 @@ namespace ObjetPowa
 {
     class Program
     {
+
         public static void Main(string[] args)
         {
-            Pokemon pikachu = new Pokemon("pikachu", 40, 100, 50, 30);
-            Pokemon sangoku = new Pokemon("sangoku", 50, 90, 40, 30);
+            Pokemon salameche = new Pokemon("salameche", 40, 100, 50, 30, PokemonType.Fire);
+            Pokemon bulbizarre = new Pokemon("bulbizarre", 200, 90, 40, 30, PokemonType.Plant);
+            Fight epicFight = new Fight(salameche, bulbizarre);
 
-
-            for (int i = 0; i < 100; i++)
-            {
-                pikachu.Damage(sangoku);
-            }
-
-            Console.ReadKey();
-
-
-
-#if false
-            Console.WriteLine("Hello World");
-
-            Fight epicFight = new Fight(pikachu, sangoku);
-
-            //pikachu.Damage(10000);
-            //pikachu.Resurection(RappelType.Basique);
-            //pikachu.Heal(PotionType.HyperPotion);
             do
             {
                 // Choix du joueur      // INPUT
-                CharacterChoice playerChoice = GetPlayerChoice();
+                CharacterChoice playerChoice = GetPlayerChoice(salameche);
 
                 // Choix de l'IA
-                CharacterChoice randomChoice = AIChoice();
+                CharacterChoice randomChoice = AIChoice(bulbizarre);
 
                 // Met à jour le combat     // UPDATE
                 epicFight.PlayRound(playerChoice, randomChoice);
 
                 // Affiche la situation du jeu      // DRAW
-                DrawFight(pikachu, sangoku);
+                DrawFight(salameche, bulbizarre);
 
             } while (epicFight.IsFightFinished() == false);
 
             // Resultat final
-            if (pikachu.IsDead() && sangoku.IsDead())
+            if (salameche.IsDead() && bulbizarre.IsDead())
             {
                 Console.WriteLine($"Draw");
             }
-            else if (pikachu.IsDead())
+            else if (salameche.IsDead())
             {
-                Console.WriteLine($"{sangoku.Name} winner");
+                Console.WriteLine($"{bulbizarre.Name} winner");
             }
             else
             {
-                Console.WriteLine($"{pikachu.Name} winner");
+                Console.WriteLine($"{salameche.Name} winner");
             }
 
             Console.ReadKey();
-#endif
         }
 
         private static void DrawFight(Pokemon pikachu, Pokemon sangoku)
@@ -72,8 +55,14 @@ namespace ObjetPowa
             Console.WriteLine($"{sangoku.Name} : {sangoku.CurrentHp} / {sangoku.HpMax}");
         }
 
-        private static CharacterChoice AIChoice()
+        private static CharacterChoice AIChoice(Pokemon ai)
         {
+            if(ai.PotionCount <= 0)
+            {
+                return CharacterChoice.Attack;
+            }
+
+
             int r = new Random().Next(1, 100);
             CharacterChoice randomChoice;
             //randomChoice = (CharacterChoice) r;       <=== Cast un int en CharacterChoice
@@ -89,7 +78,7 @@ namespace ObjetPowa
             return randomChoice;
         }
 
-        private static CharacterChoice GetPlayerChoice()
+        private static CharacterChoice GetPlayerChoice(Pokemon player)
         {
             CharacterChoice playerChoice = CharacterChoice.None;
             do
@@ -102,7 +91,16 @@ namespace ObjetPowa
                         playerChoice = CharacterChoice.Attack;
                         break;
                     case "2":
-                        playerChoice = CharacterChoice.Heal;
+
+                        if(player.PotionCount > 0)
+                        {
+                            playerChoice = CharacterChoice.Heal;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Nop noob");
+                        }
+
                         break;
                     default:
                         break;

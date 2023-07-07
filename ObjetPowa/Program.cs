@@ -11,11 +11,22 @@ namespace ObjetPowa
     {
         public static void Main(string[] args)
         {
-
-            Console.WriteLine("Hello World");
-
             Pokemon pikachu = new Pokemon("pikachu", 40, 100, 50, 30);
             Pokemon sangoku = new Pokemon("sangoku", 50, 90, 40, 30);
+
+
+            for (int i = 0; i < 100; i++)
+            {
+                pikachu.Damage(sangoku);
+            }
+
+            Console.ReadKey();
+
+
+
+#if false
+            Console.WriteLine("Hello World");
+
             Fight epicFight = new Fight(pikachu, sangoku);
 
             //pikachu.Damage(10000);
@@ -52,6 +63,7 @@ namespace ObjetPowa
             }
 
             Console.ReadKey();
+#endif
         }
 
         private static void DrawFight(Pokemon pikachu, Pokemon sangoku)

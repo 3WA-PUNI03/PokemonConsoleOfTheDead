@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ObjetPowa
 {
@@ -21,6 +22,9 @@ namespace ObjetPowa
         private int _defense;
         private int _speed;
 
+        float minFactor = 0.85f;
+        float maxFactor = 1f;
+
         // Propriétés / Property
         public string Name => _name;
         public int CurrentHp
@@ -29,7 +33,7 @@ namespace ObjetPowa
         }
         public int HpMax { get => _hpMax; }
         public int Speed => _speed;
-        
+
 
         // Constructeur / Constructor
         //public Pokemon(string name, int maxHp)
@@ -58,16 +62,35 @@ namespace ObjetPowa
         /// Impact current health based on amount 
         /// </summary>
 
+
+
+        
+
         public void Damage(Pokemon opponent)
         {
             int atk = opponent._attack;
             int defense = _defense;
+            int degat = atk - (defense / 2);
 
-            var degat = atk - (defense/2);
+            // Random factor
+            Random r = new Random();
+            float random;
+            random = r.Next(85, 101) / 100f;      // int / float => float
+            degat = (int)(degat * random);   // int * float => float
+
+            // Coup critique 
+            bool isCriticalHit = new Random().NextDouble() < 0.1;
+            if (isCriticalHit)
+            {
+                degat = (int)(degat * 1.5f);
+                Console.WriteLine("Coup critique !");
+            }
+
+            Console.Write($"{degat} / ");
 
             Damage(degat);
         }
-        
+
         public void Damage(int amount)
         {
             if (amount <= 0) return; // Guard
